@@ -1,0 +1,35 @@
+﻿@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewData["Title"] = "Employees";
+}
+
+<h2>@ViewData["Title"]</h2>
+
+<body>
+    <div class="container mt-4">
+        <h2>Employee List</h2>
+        <table id="employeeTable" class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>First Name</th>
+                    <th>Last Name</th>
+                    <th>Country</th>
+                    <th>National ID</th>
+                    <th>Hire Date</th>
+                    <th>Salary</th>
+                    <th>Arrival Time</th>
+                    <th>Leave Time</th>
+                    <th>Department</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Rows will be inserted here dynamically by JavaScript -->
+            </tbody>
+        </table>
+    </div>
+</body>
+@section Scripts {
+    <script src="@Url.Content("~/js/Employee/index.js")"></script>
+
+}

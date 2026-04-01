@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Excel Search & Filter UI</title>
+  <script src="https://cdn.jsdelivr.net/npm/xlsx/dist/xlsx.full.min.js"></script>
+  <style>
+    body {
+      font-family: Arial;
+      padding: 20px;
+      background: #f4f4f4;
+    }
+    input[type="text"] {
+      padding: 8px;
+      width: 300px;
+      margin-bottom: 15px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+    table {
+      border-collapse: collapse;
+      width: 100%;
+      background: white;
+    }
+    th, td {
+      border: 1px solid #ddd;
+      padding: 10px;
+      text-align: left;
+    }
+    th {
+      background-color: #009879;
+      color: white;
+    }
+    tr:hover {
+      background-color: #f1f1f1;
+    }
+  </style>
+</head>
+<body>
+
+  <h2>Excel Data Search & Filter</h2>
+  <input type="text" id="search" placeholder="Type to search..." />
+  <div id="status" style="margin:10px 0;color:gray;"></div>
+  <table id="table"></table>
+
+  <script>
+    const filePath = "C:\python\استاندر.xlsx"; // ✅ static path to your file
+    let data = [];
+
+    async function fetchExcel() {
+      try {
+        const response = await fetch(filePath);
+        const arrayBuffer = await response.arrayBuffer();
+        const workbook = XLSX.read(arrayBuffer, { type: "array" });
+        const firstSheet = workbook.SheetNames[0];
+        const sheetData = XLSX.utils.sheet_to_json(workbook.Sheets[firstSheet]);
+        data = sheetData;
+        document.getElementById("status").textContent = `Loaded ${data.length} records.`;
+        renderTable(data);
+      } catch (err) {
+        document.getElementById("status").textContent = "Failed to load Excel file.";
+        console.error(err);
+      }
+    }
+
+    function renderTable(rows) {
+      const table = document.getElementById("table");
+      table.innerHTML = "";
+
+      if (rows.length === 0) {
+        table.innerHTML = "<tr><td>No data found.</td></tr>";
+        return;
+      }
+
+      // Header
+      const header = `<tr>${Object.keys(rows[0]).map(k => `<th>${k}</th>`).join("")}</tr>`;
+      // Rows
+      const body = rows.map(row =>
+        `<tr>${Object.values(row).map(val => `<td>${val ?? ""}</td>`).join("")}</tr>`
+      ).join("");
+
+      table.innerHTML = header + body;
+    }
+
+    document.getElementById("search").addEventListener("input", function () {
+      const value = this.value.toLowerCase();
+      const filtered = data.filter(row =>
+        Object.values(row).some(cell => (cell + "").toLowerCase().includes(value))
+      );
+      renderTable(filtered);
+    });
+
+    fetchExcel();
+  </script>
+
+</body>
+</html>

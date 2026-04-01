@@ -1,0 +1,32 @@
+﻿
+@model Department
+@{
+    ViewData["Title"]="New";
+}
+<h1>New</h1>
+@*<form method="post" action="/Department/SaveNew">*@<!-- u must add [HttpPost] on the Action else it can send the data by URL-->
+<form method="post" asp-action="SaveNew" asp-controller="Department">
+    <div>
+        @*<label>Name</label>*@
+        <!--HTML types in .net-->
+        <!--1- Pure HTML-->
+        @*<input type="text" name="Name" class="form-control" value="@Model.Name"  />*@
+        <!--2-HTML Hlper [lossly type] without model [.Net,.Net core]-->
+        @*@Html.TextBox("Name"); // create txtBox for Name property after searching on it in Model,ViewData,viewbag,viewModel,*@
+        <!--HTML Hlper [strong type] =>[.Net,.Net core]-->
+        @* @Html.TextBoxFor(d=>d.Name,new{@class="form-control",placeholder="Enter Dep Name",style="color:red"});*@
+        @Html.EditorFor(d=>d.Name,new{htmlAttributes=new{@class="form-control",placeholder="Enter Dep Name"}})<!--create input item( string ,int =>TxtBox,CheckBox(bool) , List(DropDown List)) based on datatype in func ,.. but not has validate DT as Password ,.. so we add it on the model property-->
+        <!--3-Tag Helper-->
+        <label asp-for="Name">Back to List</label>
+        <
+    </div>
+    <div>
+        <label>Manager Name</label>
+        <input type="text" name="ManagerName" class="form-control" value="@Model.ManagerName" />
+    </div>
+    <input type="submit" value="Add" class="btn btn-success" />
+    <a href="/Department/Index">Back to Index</a>
+    @*@Html.ActionLink("Back to Index","Index","Department",new{@class="btn btn-success"})*@
+    <a asp-action="Index" asp-controller="Department"></a>
+    <a asp-action="Details" asp-controller="Department"></a>@* asp-route-id="1" asp-all-route-data="Dictionary"*@
+</form>

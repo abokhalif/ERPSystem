@@ -1,0 +1,56 @@
+﻿@model Employee
+@{
+    ViewData["Title"] = "New";
+    SelectList deptList = new SelectList(ViewBag.deptList, "Id", "Name");
+}
+
+<h1>New</h1>
+<form asp-action="SaveNew" asp-controller="Employee" method="post">
+    <div asp-validation-summary=All></div>@* // for show errors for ModelOnly(properties) or All(properties+Ex) or None*@ 
+   <div>
+        <label asp-for="Name"></label>
+        <input asp-for="Name" class="form-control" />
+        <span asp-validation-for="Name" class="text-danger"></span>
+    </div>
+    <div>
+        <label asp-for="Salary"></label>
+        <input asp-for="Salary" class="form-control" />
+        <span asp-validation-for="Salary" class="text-danger"></span>
+
+    </div> 
+    <div>
+        <label asp-for="Image"></label>
+        <input asp-for="Image" class="form-control" />
+        <span asp-validation-for="Image" class="text-danger"></span>
+
+    </div>
+
+    <div>
+        <label asp-for="Address"></label>
+        <input asp-for="Address" class="form-control" />
+        <span asp-validation-for="Address" class="text-danger"></span>
+
+    </div>
+    <div>
+        <label asp-for="DeptId"></label>
+        @*<input asp-for="Salary" class="form-control" />*@
+        <select asp-for="DeptId" class="form-control" asp-items="deptList">
+            <option value="0">select department</option>
+        </select>
+        <span asp-validation-for="DeptId" class="text-danger"></span>
+
+    </div>
+    <div>
+        <input type="submit" value="Add" class="btn btn-success" />
+    </div>
+    @*to make the validation run in client-side for each input must join =>
+    1-jquery // in _Layout file
+    2-jquery-validation // in _ValidationScripts
+    3-jquery-validation-unobtrusive // in _ValidationScripts
+    *@
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>   
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+
+</form>
+

@@ -1,0 +1,43 @@
+﻿@*@model Employee* // 1- ViewData , 2-ViewBag*@
+@model EmployeeWithExtraInfoViewModel
+@{
+    ViewData["Title"] = "ViewTest";
+}
+
+<h1>ViewTest</h1>
+<!-- View Data=>  type casting and runtime error(string)-->
+@*<h2 style="background-color:@ViewData["Color"]">@Model.Name</h2>
+<h3>Message : @ViewData["Message"]</h3>
+<select class="form-control">
+    @foreach (var item in (List<string>)ViewData["List"])
+    {
+        <option>@item</option>
+    }
+</select>
+
+@((int)ViewData["Value"]+10)*@
+
+<!---ViewBag=> type casting but no runtime error-->
+@*<h2 style="background-color:@ViewBag.Color">@Model.Name</h2>
+<h3>Message : @ViewBag.Message</h3>
+<select class="form-control">
+    @foreach (var item in (List<string>)ViewBag.List)
+    {
+        <option>@item</option>
+    }
+</select>
+<!-- u can get by ViewData or ViewBag and set also-->
+      @((int)ViewData["Value"] + 10)*@
+
+<!---ViewModel => no type casting no runtime error-->
+<h2 style="background-color:@Model.Color">@Model.Name</h2>
+<h3>Message : @Model.Message</h3>
+<select class="form-control">
+    @foreach (var item in Model.Branches)
+    {
+        <option>@item</option>
+    }
+</select>
+<!-- u can get by ViewData or ViewBag and set also-->
+@(Model.Temp + 10)
+

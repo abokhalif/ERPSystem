@@ -1,0 +1,10 @@
+﻿@using Demo.Repository
+@inject IEmployeeRepo EmpRepo //another injection in view adding to the in the ctor to sure the add container method
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h3>Service ID from the controller inject.@ViewBag.ID</h3>
+<h3>Service ID from the view inject ......@EmpRepo.guid</h3>
+
+

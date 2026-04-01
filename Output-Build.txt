@@ -1,0 +1,5 @@
+﻿Build started...
+1>------ Build started: Project: Blood banck, Configuration: Debug Any CPU ------
+1>  Blood banck -> C:\Users\ST\source\repos\Blood banck\bin\Debug\Blood banck.exe
+========== Build: 1 succeeded, 0 failed, 0 up-to-date, 0 skipped ==========
+========== Elapsed 00:06.738 ==========

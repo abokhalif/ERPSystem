@@ -1,0 +1,24 @@
+﻿<h1>Welcome to view result</h1><!--html code-->
+<div id="div1">Hello MVC</div><!--html code-->
+<style>
+	#div1 {
+		background-color: aquamarine
+	}</style><!--css code-->
+<!-- <script>alert("Hello");</script>--> <!-- java script code-->
+<!--C# code => Razor Engine-->
+@{
+	int x = 5; int y = 6;
+}
+<!--Inline Exprission -->
+@x
+<h3>Y=@y</h3>
+@if(x>y)
+{<h3>x=@x Greeter than y=@y</h3>}
+else
+{
+	<h3>x=@x Less than y=@y</h3>
+}
+@for (int i = 0; i < 10; i++)
+{
+	<h3>i=@i</h3>
+}
