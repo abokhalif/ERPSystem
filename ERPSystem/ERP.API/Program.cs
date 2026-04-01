@@ -28,6 +28,8 @@ namespace ERP.API
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
+
+            app.UseExceptionErrorMiddleware();
             if (app.Environment.IsDevelopment())
             {
                 app.UseSwagger();
