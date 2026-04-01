@@ -1,4 +1,9 @@
 
+using ERP.API.Extentions;
+using ERP.Persistence.Entities;
+using Microsoft.EntityFrameworkCore;
+using System;
+
 namespace ERP.API
 {
     public class Program
@@ -13,6 +18,12 @@ namespace ERP.API
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
+
+            builder.Services.AddDbContext<AppDbContext>(option =>
+            {
+                option.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
+            });
+            builder.Services.RegisterService();
 
             var app = builder.Build();
 
