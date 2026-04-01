@@ -35,6 +35,7 @@ namespace ERP.API
                 app.UseSwagger();
                 app.UseSwaggerUI();
             }
+            app.UseStatusCodePagesWithReExecute("/errors/{0}");//for handling NotFound error to return ApiResponse object
 
             app.UseHttpsRedirection();
             app.UseAuthentication();

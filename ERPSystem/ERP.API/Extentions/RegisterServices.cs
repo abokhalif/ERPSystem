@@ -1,4 +1,5 @@
-﻿using ERP.Application.Interfaces;
+﻿using ERP.API.ResponseModels;
+using ERP.Application.Interfaces;
 using ERP.Infrastructure.Implementation;
 using ERP.Infrastructure.Interface;
 using ERP.Persistence.Entities;
@@ -26,14 +27,14 @@ namespace ERP.API.Extentions
            services.AddScoped<IAuthService, AuthService>();
            services.AddScoped<IJwtService, JwtService>();
             //configure validation error on global
-            //services.AddControllers().ConfigureApiBehaviorOptions(options =>
-            //{
-            //    options.InvalidModelStateResponseFactory = context =>
-            //    {
-            //        var errors = context.ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage).ToList();
-            //        return new BadRequestObjectResult(ApiValidationErrorResponse.Fail("Validation failed", 400, errors));
-            //    };
-            //});
+            services.AddControllers().ConfigureApiBehaviorOptions(options =>
+            {
+                options.InvalidModelStateResponseFactory = context =>
+                {
+                    var errors = context.ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage).ToList();
+                    return new Microsoft.AspNetCore.Mvc.BadRequestObjectResult(ApiValidationErrorResponse.Fail("Validation failed", 400, errors));
+                };
+            });
 
 
 
