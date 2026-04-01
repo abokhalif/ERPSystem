@@ -35,12 +35,12 @@ namespace ERP.API
             }
 
             app.UseHttpsRedirection();
-
+            app.UseAuthentication();
             app.UseAuthorization();
-            app.Run(async context =>
-            {
-                await context.Request.ReadFormAsync();
-            });
+            //app.Run(async context =>
+            //{
+            //    await context.Request.ReadFormAsync();
+            //});
 
 
             app.MapControllers();
