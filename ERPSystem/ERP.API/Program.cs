@@ -23,12 +23,14 @@ namespace ERP.API
             {
                 option.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
             });
+
+            builder.Services.AddHostedService<MigrationService>();
+
             builder.Services.RegisterService();
 
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
-
             app.UseExceptionErrorMiddleware();
             if (app.Environment.IsDevelopment())
             {
