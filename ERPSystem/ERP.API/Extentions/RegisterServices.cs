@@ -36,6 +36,7 @@ namespace ERP.API.Extentions
                 };
             });
 
+            services.AddScoped<IUnitOfWork, UnitOfWork>();
 
 
             return services;
