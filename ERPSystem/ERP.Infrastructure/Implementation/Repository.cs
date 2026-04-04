@@ -10,22 +10,18 @@ using System.Threading.Tasks;
 
 namespace ERP.Infrastructure.Implementation
 {
-    public class Repository<T> : IRepository<T> where T : class
+    public class Repository<T> : BaseRepository<T> , IRepository<T> where T : class
     {
         private readonly AppDbContext dbContext;
 
-        public Repository(AppDbContext dbContext)
+        public Repository(AppDbContext dbContext): base(dbContext)
         {
             this.dbContext = dbContext;
         }
-        public async Task<IReadOnlyList<T>> GetAllAsync()
+        public async Task<T?> GetEntityWithSpecAsync(ISpecification<T> spec)
         {
-            return await dbContext.Set<T>().ToListAsync();
-        }
-
-        public async Task<T?> GetAsync(int id)
-        {
-            return await dbContext.Set<T>().FindAsync(id);
+            var query = ApplySpecifications(spec);
+            return await query.FirstOrDefaultAsync();
         }
 
         public async Task<T?> GetWithSpecAsync(ISpecification<T> spec)
@@ -41,11 +37,9 @@ namespace ERP.Infrastructure.Implementation
             var baseQuery = GetQuery(dbContext.Set<T>().AsQueryable(), spec, ignorePaging: true);
             var totalCount = await baseQuery.CountAsync();
 
-
             var pagedQuery = spec.IsPagingEnabled
                 ? baseQuery.Skip(spec.Skip).Take(spec.Take)
                 : baseQuery;
-
 
             var data = await pagedQuery.ToListAsync();
 
@@ -62,29 +56,19 @@ namespace ERP.Infrastructure.Implementation
 
                 };
             }
-
             return (data, meta);
         }
-
-
-
-
-        public async Task<int> GetCountAsync(ISpecification<T> spec)
+        public async Task<int> CountAsync(ISpecification<T> spec)
         {
             return await ApplySpecifications(spec).CountAsync();
         }
-
         private IQueryable<T> ApplySpecifications(ISpecification<T> spec)
         {
             IQueryable<T> query = GetQuery(dbContext.Set<T>().AsQueryable(), spec);
 
             return query;
         }
-
-        public static IQueryable<T> GetQuery(
-     IQueryable<T> inputQuery,
-     ISpecification<T> spec,
-     bool ignorePaging = false)
+        public static IQueryable<T> GetQuery( IQueryable<T> inputQuery, ISpecification<T> spec, bool ignorePaging = false)
         {
             var query = inputQuery;
 
@@ -115,7 +99,6 @@ namespace ERP.Infrastructure.Implementation
                             : orderedQuery!.ThenBy(order.KeySelector);
                     }
                 }
-
                 query = orderedQuery!;
             }
 
@@ -127,6 +110,5 @@ namespace ERP.Infrastructure.Implementation
 
             return query;
         }
-
     }
 }

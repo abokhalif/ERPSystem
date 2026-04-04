@@ -10,7 +10,7 @@ namespace ERP.Domain.Entities.Product
     {
         public string Name { get; set; } = null!;
         public decimal BasePrice { get; set; }
-
+        public DateTime CreatedAt { get; set; }= DateTime.Now;
         public bool IsDeleted { get; set; }
 
         public ICollection<ProductVariant> Variants { get; set; }

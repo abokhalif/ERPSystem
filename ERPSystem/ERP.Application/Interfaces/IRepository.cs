@@ -7,12 +7,12 @@ using System.Threading.Tasks;
 
 namespace ERP.Application.Interfaces
 {
-    public interface IRepository<T> where T : class
+    public interface IRepository<T>:IBaseRepository<T> where T : class
     {
-        Task<T?> GetAsync(int id);
-        Task<IReadOnlyList<T>> GetAllAsync();
+       
+        Task<T?> GetEntityWithSpecAsync(ISpecification<T> spec);
         Task<IReadOnlyList<T>> GetAllWithSpecAsync(ISpecification<T> spec);
-        Task<int> GetCountAsync(ISpecification<T> spec);
+        Task<int> CountAsync(ISpecification<T> spec);
         Task<(IReadOnlyList<T> Data, PagingMetaData? Meta)> GetPagedWithMetaAsync(ISpecification<T> spec);
     }
 }
