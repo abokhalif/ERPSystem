@@ -1,5 +1,6 @@
 ﻿using ERP.Application.Interfaces;
 using ERP.Persistence.Entities;
+using Microsoft.EntityFrameworkCore.Storage;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,10 +13,11 @@ namespace ERP.Infrastructure.Implementation
     {
         private readonly AppDbContext _context;
         private readonly Dictionary<Type, object> _repositories;
+        private IDbContextTransaction? _transaction;
 
         public UnitOfWork(AppDbContext context)
         {
-            _context = context;
+            _context = context ?? throw new ArgumentNullException(nameof(context));
             _repositories = new Dictionary<Type, object>();
         }
 
@@ -33,9 +35,76 @@ namespace ERP.Infrastructure.Implementation
         }
 
         public async Task<int> SaveChangesAsync()
-            => await _context.SaveChangesAsync();
+           {
+            try
+            {
+                return await _context.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+                await RollbackTransactionAsync();
+                throw new InvalidOperationException("An error occurred while saving changes to the database.", ex);
+            }
+        }
 
+
+        /// <summary>
+        /// Begins a new database transaction asynchronously.
+        /// </summary>
+        public async Task BeginTransactionAsync()
+        {
+            _transaction ??= await _context.Database.BeginTransactionAsync();
+        }
+
+        /// <summary>
+        /// Commits the current transaction asynchronously.
+        /// </summary>
+        public async Task CommitTransactionAsync()
+        {
+            try
+            {
+                if (_transaction != null)
+                {
+                    await _transaction.CommitAsync();
+                    await _transaction.DisposeAsync();
+                    _transaction = null;
+                }
+            }
+            catch
+            {
+                await RollbackTransactionAsync();
+                throw;
+            }
+        }
+
+        /// <summary>
+        /// Rolls back the current transaction asynchronously.
+        /// </summary>
+        public async Task RollbackTransactionAsync()
+        {
+            try
+            {
+                if (_transaction != null)
+                {
+                    await _transaction.RollbackAsync();
+                    await _transaction.DisposeAsync();
+                    _transaction = null;
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new InvalidOperationException("An error occurred while rolling back the transaction.", ex);
+            }
+        }
+
+        /// <summary>
+        /// Disposes the context and transaction.
+        /// </summary>
         public void Dispose()
-            => _context.Dispose();
+        {
+            _transaction?.Dispose();
+            _context.Dispose();
+            GC.SuppressFinalize(this);
+        }
     }
 }

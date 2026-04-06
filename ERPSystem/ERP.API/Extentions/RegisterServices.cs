@@ -1,5 +1,6 @@
 ﻿using ERP.API.ResponseModels;
 using ERP.Application.Interfaces;
+using ERP.Application.ResponseModels;
 using ERP.Infrastructure.Implementation;
 using ERP.Infrastructure.Interface;
 using ERP.Persistence.Entities;
@@ -32,11 +33,13 @@ namespace ERP.API.Extentions
                 options.InvalidModelStateResponseFactory = context =>
                 {
                     var errors = context.ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage).ToList();
-                    return new Microsoft.AspNetCore.Mvc.BadRequestObjectResult(ApiValidationErrorResponse.Fail("Validation failed", 400, errors));
+                    return new Microsoft.AspNetCore.Mvc.BadRequestObjectResult(SimpleApiResponse.FailureResponse("Validation failed", errors, 400));
                 };
             });
 
             services.AddScoped<IUnitOfWork, UnitOfWork>();
+            services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
+            services.AddScoped(typeof(IBaseRepository<>), typeof(BaseRepository<>));
 
 
             return services;

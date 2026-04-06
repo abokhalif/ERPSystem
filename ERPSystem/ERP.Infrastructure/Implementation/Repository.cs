@@ -24,17 +24,14 @@ namespace ERP.Infrastructure.Implementation
             return await query.FirstOrDefaultAsync();
         }
 
-        public async Task<T?> GetWithSpecAsync(ISpecification<T> spec)
-        {
-            return await ApplySpecifications(spec).FirstOrDefaultAsync();
-        }
+       
         public async Task<IReadOnlyList<T>> GetAllWithSpecAsync(ISpecification<T> spec)
         {
             return await ApplySpecifications(spec).ToListAsync();
         }
         public async Task<(IReadOnlyList<T> Data, PagingMetaData? Meta)> GetPagedWithMetaAsync(ISpecification<T> spec)
         {
-            var baseQuery = GetQuery(dbContext.Set<T>().AsQueryable(), spec, ignorePaging: true);
+            var baseQuery = SpecificationEvaluator<T>.GetQuery(dbContext.Set<T>().AsQueryable(), spec, ignorePaging: true);
             var totalCount = await baseQuery.CountAsync();
 
             var pagedQuery = spec.IsPagingEnabled
@@ -64,51 +61,10 @@ namespace ERP.Infrastructure.Implementation
         }
         private IQueryable<T> ApplySpecifications(ISpecification<T> spec)
         {
-            IQueryable<T> query = GetQuery(dbContext.Set<T>().AsQueryable(), spec);
+            IQueryable<T> query =SpecificationEvaluator<T>.GetQuery(dbContext.Set<T>().AsQueryable(), spec);
 
             return query;
         }
-        public static IQueryable<T> GetQuery( IQueryable<T> inputQuery, ISpecification<T> spec, bool ignorePaging = false)
-        {
-            var query = inputQuery;
-
-            if (spec.Criteria is not null)
-                query = query.Where(spec.Criteria);
-
-            query = spec.Includes.Aggregate(query,
-                (current, include) => current.Include(include));
-
-            if (spec.OrderExpressions != null && spec.OrderExpressions.Any())
-            {
-                IOrderedQueryable<T>? orderedQuery = null;
-
-                for (int i = 0; i < spec.OrderExpressions.Count; i++)
-                {
-                    var order = spec.OrderExpressions[i];
-
-                    if (i == 0)
-                    {
-                        orderedQuery = order.Descending
-                            ? query.OrderByDescending(order.KeySelector)
-                            : query.OrderBy(order.KeySelector);
-                    }
-                    else
-                    {
-                        orderedQuery = order.Descending
-                            ? orderedQuery!.ThenByDescending(order.KeySelector)
-                            : orderedQuery!.ThenBy(order.KeySelector);
-                    }
-                }
-                query = orderedQuery!;
-            }
-
-            // ✅ Apply paging only if NOT ignored
-            if (!ignorePaging && spec.IsPagingEnabled)
-            {
-                query = query.Skip(spec.Skip).Take(spec.Take);
-            }
-
-            return query;
-        }
+       
     }
 }

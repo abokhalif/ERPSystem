@@ -1,43 +1,103 @@
 ﻿using ERP.API.ResponseModels;
+using ERP.Application.ResponseModels;
 using System.Net;
 
 namespace ERP.API.Middlewares
 {
-    public class ExceptionErrorMiddleware
-    {
-        private readonly RequestDelegate next;
-        private readonly ILogger<ExceptionErrorMiddleware> logger;
-        private readonly IHostEnvironment environment;
-
-        public ExceptionErrorMiddleware(RequestDelegate next, ILogger<ExceptionErrorMiddleware> logger, IHostEnvironment environment)
+        /// <summary>
+        /// Global exception handling middleware.
+        /// </summary>
+        public class ExceptionErrorMiddleware
         {
-            this.next = next;
-            this.logger = logger;
-            this.environment = environment;
-        }
-        public async Task InvokeAsync(HttpContext context)
-        {
-            try
+            private readonly RequestDelegate _next;
+            private readonly ILogger<ExceptionErrorMiddleware> _logger;
+            private readonly IHostEnvironment _environment;
+
+            public ExceptionErrorMiddleware(
+                RequestDelegate next,
+                ILogger<ExceptionErrorMiddleware> logger,
+                IHostEnvironment environment)
             {
-                await next.Invoke(context);
-
-            }
-            catch (Exception ex)
-            {
-                // in case development mode => return the developer ex page as json object
-                logger.LogError(ex, ex.Message);
-                context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
-
-                var response = environment.IsDevelopment()
-                    ? ApiExceptionErrorResponse.Fail(ex.Message, (int)HttpStatusCode.InternalServerError, ex.StackTrace.ToString())
-                    : ApiExceptionErrorResponse.Fail(statusCode: (int)HttpStatusCode.InternalServerError);
-                await context.Response.WriteAsJsonAsync(response);
-
-                //in case production mode => log ex in database or files using serilog [later]
-
+                _next = next ?? throw new ArgumentNullException(nameof(next));
+                _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+                _environment = environment ?? throw new ArgumentNullException(nameof(environment));
             }
 
+            /// <summary>
+            /// Processes the HTTP request and handles exceptions.
+            /// </summary>
+            public async Task InvokeAsync(HttpContext context)
+            {
+                try
+                {
+                    await _next.Invoke(context);
+                }
+                catch (ArgumentNullException ex)
+                {
+                    _logger.LogError(ex, "Argument null exception occurred");
+                    await HandleExceptionAsync(context, ex, HttpStatusCode.BadRequest, "Invalid request parameters");
+                }
+                catch (ArgumentException ex)
+                {
+                    _logger.LogError(ex, "Argument exception occurred");
+                    await HandleExceptionAsync(context, ex, HttpStatusCode.BadRequest, "Invalid argument provided");
+                }
+                catch (UnauthorizedAccessException ex)
+                {
+                    _logger.LogError(ex, "Unauthorized access exception occurred");
+                    await HandleExceptionAsync(context, ex, HttpStatusCode.Unauthorized, "Unauthorized access");
+                }
+                catch (KeyNotFoundException ex)
+                {
+                    _logger.LogError(ex, "Resource not found");
+                    await HandleExceptionAsync(context, ex, HttpStatusCode.NotFound, "Resource not found");
+                }
+                catch (InvalidOperationException ex)
+                {
+                    _logger.LogError(ex, "Invalid operation exception occurred");
+                    await HandleExceptionAsync(context, ex, HttpStatusCode.BadRequest, "Invalid operation");
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError(ex, "Unhandled exception occurred: {ExceptionMessage}", ex.Message);
+                    await HandleExceptionAsync(context, ex, HttpStatusCode.InternalServerError, "An error occurred while processing your request");
+                }
+            }
 
+            /// <summary>
+            /// Handles exceptions and writes response to context.
+            /// </summary>
+            private Task HandleExceptionAsync(
+                HttpContext context,
+                Exception exception,
+                HttpStatusCode statusCode,
+                string message)
+            {
+                context.Response.ContentType = "application/json";
+                context.Response.StatusCode = (int)statusCode;
+
+                SimpleApiResponse response;
+
+                if (_environment.IsDevelopment())
+                {
+                    // In development: provide detailed stack trace and inner exceptions
+                    response = SimpleApiResponse.ErrorResponseDetailedEx(
+                        exception,
+                        details: $"{message}\n\nStack Trace: {exception.StackTrace}",
+                        statusCode: (int)statusCode);
+                }
+                else
+                {
+                    // In production: provide generic message without sensitive details
+                    response = SimpleApiResponse.ErrorResponse(
+                        exception,
+                        statusCode: (int)statusCode);
+
+                    // Override message for production
+                    response.Message = message;
+                }
+
+                return context.Response.WriteAsJsonAsync(response);
+            }
         }
     }
-}

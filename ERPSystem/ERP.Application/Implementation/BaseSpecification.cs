@@ -8,41 +8,38 @@ using System.Threading.Tasks;
 
 namespace ERP.Application.Implementation
 {
-    public class BaseSpecifications<T> : ISpecification<T> where T : class
+    using System.Linq.Expressions;
+
+public abstract class BaseSpecification<T> : ISpecification<T>
+{
+    public Expression<Func<T, bool>>? Criteria { get; protected set; }
+
+    public List<Expression<Func<T, object>>> Includes { get; } = new();
+
+    public List<(Expression<Func<T, object>> KeySelector, bool Descending)> OrderExpressions { get; } = new();
+
+    public int Skip { get; protected set; }
+    public int Take { get; protected set; }
+    public bool IsPagingEnabled { get; protected set; }
+
+    public bool AsNoTracking { get; protected set; } = true;
+        public void AddInclude(Expression<Func<T, object>> include)
+        => Includes.Add(include);
+
+        public void AddOrderBy(Expression<Func<T, object>> keySelector)
+        => OrderExpressions.Add((keySelector, false));
+
+        public void AddOrderByDesc(Expression<Func<T, object>> keySelector)
+        => OrderExpressions.Add((keySelector, true));
+
+    protected void ApplyPaging(int skip, int take)
     {
-        public Expression<Func<T, bool>> Criteria { get; } 
-        public List<Expression<Func<T, object>>> Includes { get; } = new List<Expression<Func<T, object>>>();
-        public List<(Expression<Func<T, object>> KeySelector, bool Descending)> OrderExpressions { get; } = new();
-
-
-        public int Take { get; private set; }
-        public int Skip { get; private set; }
-        public bool IsPagingEnabled { get; private set; } = false;
-
-
-        public BaseSpecifications()
-        {
-
-        }
-        public BaseSpecifications(Expression<Func<T, bool>> expression)
-        {
-            Criteria = expression;// As --> o => o.id==1
-        }
-        public void AddInclude(Expression<Func<T, object>> includeExpression)
-        {
-            Includes.Add(includeExpression);
-        }
-        public void AddOrderBy(Expression<Func<T, object>> keySelector, bool descending = false)
-        {
-            OrderExpressions.Add((keySelector, descending));
-        }
-        public void ApplyPaging(int pageNumber, int pageSize)
-        {
-            Skip = (pageNumber - 1) * pageSize;
-            Take = pageSize;
-            IsPagingEnabled = true;
-        }
-
-
+        Skip = skip;
+        Take = take;
+        IsPagingEnabled = true;
     }
+        protected void EnableTracking()
+        => AsNoTracking = false;
+    }
+
 }

@@ -1,41 +1,67 @@
 ﻿using ERP.Application.Shared;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace ERP.API.ResponseModels
 {
     public class ApiResponse<T> : BaseResponse
     {
+        public IReadOnlyList<T>? ListedData { get; set; }
         public T? Data { get; set; }
-
         public PagingMetaData? MetaData { get; set; } = new PagingMetaData();
-        public static ApiResponse<T> SuccessWithPagingMetaData(T data, PagingMetaData? metaData = null, string? message = null)
+        public static ApiResponse<T> SuccessWithPagingMetaData(IReadOnlyList<T> data, PagingMetaData? metaData = null, string? message = null, int statusCode = 200)
         {
             return new ApiResponse<T>
             {
-                StatusCode = 200,
-                Message = message ?? GetDefaultMessage(200),
+                StatusCode = statusCode,
+                Message = message ?? GetDefaultMessage(statusCode),
                 MetaData = metaData ?? new PagingMetaData(),
-                Data = data,
+                ListedData = data,
             };
         }
-        public static ApiResponse<T> Success(T data, string? message = null)
+        public static ApiResponse<T> SuccessListedData(IReadOnlyList<T> data, string? message = null, int statusCode = 200)
         {
             return new ApiResponse<T>
             {
-                StatusCode = 200,
-                Message = message ?? GetDefaultMessage(200),
+                StatusCode = statusCode,
+                Message = message ?? GetDefaultMessage(statusCode),
+                ListedData = data,
+            };
+        }
+        public static ApiResponse<T> SuccessResponse(T data, string? message = null, int statusCode = 200)
+        {
+            return new ApiResponse<T>
+            {
+                StatusCode = statusCode,
+                Message = message ?? GetDefaultMessage(statusCode),
                 Data = data,
+
             };
         }
 
-        public static ApiResponse<T> Fail(string? message = null, int statusCode = 400)
+        public static ApiResponse<T> FailureResponse(string? message = null, List<string>? errors = null, int statusCode = 400)
         {
             return new ApiResponse<T>
             {
                 StatusCode = statusCode,
                 Message = message ?? GetDefaultMessage(statusCode),
                 Data = default,
-                MetaData = default
+                MetaData = default,
+                Errors = errors ?? new()
 
+            };
+        }
+        public static ApiResponse<T> ErrorResponse(Exception ex, int statusCode = 500)
+        {
+            var errors = new List<string> { ex.Message };
+            if (ex.InnerException != null)
+                errors.Add(ex.InnerException.Message);
+
+            return new ApiResponse<T>
+            {
+                Message = "An error occurred",
+                Data = default,
+                StatusCode = statusCode,
+                Errors = errors
             };
         }
 

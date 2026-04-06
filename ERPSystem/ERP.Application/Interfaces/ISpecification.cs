@@ -17,6 +17,14 @@ namespace ERP.Application.Interfaces
      int Skip { get; }
     int Take { get; }
     bool IsPagingEnabled { get; }
-}
+        bool AsNoTracking { get; }  
+        protected void AddInclude(Expression<Func<T, object>> include);
+
+        protected void AddOrderBy(Expression<Func<T, object>> keySelector);
+
+        protected void AddOrderByDesc(Expression<Func<T, object>> keySelector);
+
+    }
+
 
 }
