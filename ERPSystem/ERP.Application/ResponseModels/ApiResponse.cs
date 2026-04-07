@@ -1,5 +1,4 @@
-﻿using ERP.Application.Shared;
-using static System.Runtime.InteropServices.JavaScript.JSType;
+﻿using ERP.Application.ResponseModels;
 
 namespace ERP.API.ResponseModels
 {
@@ -8,6 +7,7 @@ namespace ERP.API.ResponseModels
         public IReadOnlyList<T>? ListedData { get; set; }
         public T? Data { get; set; }
         public PagingMetaData? MetaData { get; set; } = new PagingMetaData();
+
         public static ApiResponse<T> SuccessWithPagingMetaData(IReadOnlyList<T> data, PagingMetaData? metaData = null, string? message = null, int statusCode = 200)
         {
             return new ApiResponse<T>

@@ -9,7 +9,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ERP.Persistence.Implementation
+namespace ERP.Infrastructure.Implementation.Shared
 {
     public class AuthService : IAuthService
     {

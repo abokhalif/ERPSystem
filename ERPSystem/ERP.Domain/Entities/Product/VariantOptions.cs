@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace ERP.Domain.Entities.Product
 {
-    public class VariantOption:BaseEntity 
+    public class VariantOptions : BaseEntity
     {
         public string Name { get; set; } = null!;
     }

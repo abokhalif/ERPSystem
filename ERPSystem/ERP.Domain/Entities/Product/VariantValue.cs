@@ -12,7 +12,7 @@ namespace ERP.Domain.Entities.Product
         public ProductVariant ProductVariant { get; set; } = null!;
 
         public int VariantOptionId { get; set; }
-        public VariantOption Option { get; set; } = null!;
+        public VariantOptions Option { get; set; } = null!;
 
         public string Value { get; set; } = null!;
     }

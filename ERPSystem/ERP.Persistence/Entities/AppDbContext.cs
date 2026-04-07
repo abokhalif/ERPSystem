@@ -28,7 +28,7 @@ namespace ERP.Persistence.Entities
 
         public DbSet<Product> Products { get; set; }
         public DbSet<ProductVariant> ProductVariants { get; set; }
-        public DbSet<VariantOption> VariantOptions { get; set; }
+        public DbSet<VariantOptions> VariantOptions { get; set; }
         public DbSet<VariantValue> VariantValues { get; set; }
 
         #endregion

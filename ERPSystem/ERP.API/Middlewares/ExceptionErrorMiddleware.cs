@@ -76,12 +76,12 @@ namespace ERP.API.Middlewares
                 context.Response.ContentType = "application/json";
                 context.Response.StatusCode = (int)statusCode;
 
-                SimpleApiResponse response;
+                BaseApiResponse response;
 
                 if (_environment.IsDevelopment())
                 {
                     // In development: provide detailed stack trace and inner exceptions
-                    response = SimpleApiResponse.ErrorResponseDetailedEx(
+                    response = BaseApiResponse.ErrorResponseDetailedEx(
                         exception,
                         details: $"{message}\n\nStack Trace: {exception.StackTrace}",
                         statusCode: (int)statusCode);
@@ -89,7 +89,7 @@ namespace ERP.API.Middlewares
                 else
                 {
                     // In production: provide generic message without sensitive details
-                    response = SimpleApiResponse.ErrorResponse(
+                    response = BaseApiResponse.ErrorResponse(
                         exception,
                         statusCode: (int)statusCode);
 

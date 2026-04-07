@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ERP.Infrastructure.Implementation
+namespace ERP.Infrastructure.Implementation.Shared
 {
     public class UnitOfWork: IUnitOfWork
     {

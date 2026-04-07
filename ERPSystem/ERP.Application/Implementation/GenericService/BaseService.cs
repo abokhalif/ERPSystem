@@ -1,14 +1,14 @@
 ﻿using ERP.API.ResponseModels;
 using ERP.Application.Interfaces;
 using System.Net;
+using Microsoft.Extensions.Logging;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using ERP.Application.ResponseModels;
-using Microsoft.Extensions.Logging;
 
-namespace ERP.Application.Implementation.Services
+namespace ERP.Application.Implementation.GenericService
 {
     /// <summary>
     /// Base service class with common operations and response handling.
@@ -124,17 +124,17 @@ namespace ERP.Application.Implementation.Services
         /// <summary>
         /// Deletes an entity by ID asynchronously.
         /// </summary>
-        public virtual async Task<SimpleApiResponse> DeleteAsync(int id)
+        public virtual async Task<BaseApiResponse> DeleteAsync(int id)
         {
             try
             {
                 if (id <= 0)
-                    return SimpleApiResponse.FailureResponse("Invalid ID provided", new List<string> { "ID must be positive" }, 400);
+                    return BaseApiResponse.FailureResponse("Invalid ID provided", new List<string> { "ID must be positive" }, 400);
 
                 var entity = await _repository.GetAsync(id);
 
                 if (entity == null)
-                    return SimpleApiResponse.FailureResponse($"{typeof(T).Name} not found", statusCode: 404);
+                    return BaseApiResponse.FailureResponse($"{typeof(T).Name} not found", statusCode: 404);
 
                 await _unitOfWork.BeginTransactionAsync();
                 _repository.Delete(entity);
@@ -142,13 +142,13 @@ namespace ERP.Application.Implementation.Services
                 await _unitOfWork.CommitTransactionAsync();
 
                 _logger.LogInformation($"{typeof(T).Name} with ID {id} deleted successfully");
-                return SimpleApiResponse.SuccessResponse($"{typeof(T).Name} deleted successfully");
+                return BaseApiResponse.SuccessResponse($"{typeof(T).Name} deleted successfully");
             }
             catch (Exception ex)
             {
                 await _unitOfWork.RollbackTransactionAsync();
                 _logger.LogError(ex, $"Error deleting {typeof(T).Name}");
-                return SimpleApiResponse.ErrorResponse(ex, 500);
+                return BaseApiResponse.ErrorResponse(ex, 500);
             }
         }
 

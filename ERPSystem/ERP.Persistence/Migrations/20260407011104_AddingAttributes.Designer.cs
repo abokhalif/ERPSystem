@@ -4,6 +4,7 @@ using ERP.Persistence.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ERP.Persistence.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260407011104_AddingAttributes")]
+    partial class AddingAttributes
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -81,7 +84,7 @@ namespace ERP.Persistence.Migrations
                     b.ToTable("ProductVariants");
                 });
 
-            modelBuilder.Entity("ERP.Domain.Entities.Product.VariantOptions", b =>
+            modelBuilder.Entity("ERP.Domain.Entities.Product.VariantOption", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -354,7 +357,7 @@ namespace ERP.Persistence.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("ERP.Domain.Entities.Product.VariantOptions", "Option")
+                    b.HasOne("ERP.Domain.Entities.Product.VariantOption", "Option")
                         .WithMany()
                         .HasForeignKey("VariantOptionId")
                         .OnDelete(DeleteBehavior.Restrict)

@@ -9,9 +9,9 @@ using System.Threading.Tasks;
 
 namespace ERP.Persistence.Configurations.ProductConfiguration
 {
-    public class VariantOptionConfig : IEntityTypeConfiguration<VariantOption>
+    public class VariantOptionConfig : IEntityTypeConfiguration<VariantOptions>
     {
-        public void Configure(EntityTypeBuilder<VariantOption> builder)
+        public void Configure(EntityTypeBuilder<VariantOptions> builder)
         {
             builder.HasKey(o => o.Id);
 

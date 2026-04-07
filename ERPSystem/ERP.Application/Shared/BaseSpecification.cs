@@ -6,7 +6,7 @@ using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ERP.Application.Implementation
+namespace ERP.Application.Shared
 {
     using System.Linq.Expressions;
 

@@ -1,11 +1,13 @@
 ﻿using ERP.API.ResponseModels;
+using ERP.Application.Implementation.GenericService;
+using ERP.Application.Implementation.Services;
 using ERP.Application.Interfaces;
+using ERP.Application.Interfaces.IServices;
 using ERP.Application.ResponseModels;
-using ERP.Infrastructure.Implementation;
+using ERP.Infrastructure.Implementation.Shared;
 using ERP.Infrastructure.Interface;
 using ERP.Persistence.Entities;
 using ERP.Persistence.Entities.Authentication;
-using ERP.Persistence.Implementation;
 using Microsoft.AspNetCore.Identity;
 
 namespace ERP.API.Extentions
@@ -33,13 +35,14 @@ namespace ERP.API.Extentions
                 options.InvalidModelStateResponseFactory = context =>
                 {
                     var errors = context.ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage).ToList();
-                    return new Microsoft.AspNetCore.Mvc.BadRequestObjectResult(SimpleApiResponse.FailureResponse("Validation failed", errors, 400));
+                    return new Microsoft.AspNetCore.Mvc.BadRequestObjectResult(BaseApiResponse.FailureResponse("Validation failed", errors, 400));
                 };
             });
 
             services.AddScoped<IUnitOfWork, UnitOfWork>();
             services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
             services.AddScoped(typeof(IBaseRepository<>), typeof(BaseRepository<>));
+            services.AddScoped<IVariantOptionService, VariantOptionService>();
 
 
             return services;

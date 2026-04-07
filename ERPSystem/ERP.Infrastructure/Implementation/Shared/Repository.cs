@@ -1,5 +1,5 @@
 ﻿using ERP.Application.Interfaces;
-using ERP.Application.Shared;
+using ERP.Application.ResponseModels;
 using ERP.Persistence.Entities;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -8,7 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ERP.Infrastructure.Implementation
+namespace ERP.Infrastructure.Implementation.Shared
 {
     public class Repository<T> : BaseRepository<T> , IRepository<T> where T : class
     {
@@ -48,7 +48,7 @@ namespace ERP.Infrastructure.Implementation
                 {
                     TotalCount = totalCount,
                     PageSize = spec.Take,
-                    CurrentPage = (spec.Skip / spec.Take) + 1,
+                    CurrentPage = spec.Skip / spec.Take + 1,
                     TotalPages = (int)Math.Ceiling(totalCount / (double)spec.Take),
 
                 };
