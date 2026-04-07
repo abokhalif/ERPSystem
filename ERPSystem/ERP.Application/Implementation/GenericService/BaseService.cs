@@ -60,7 +60,7 @@ namespace ERP.Application.Implementation.GenericService
             {
                 var entities = await _repository.GetAllAsync();
                 _logger.LogInformation($"Retrieved {entities.Count} {typeof(T).Name} entities");
-                return ApiResponse<T>.SuccessListedData(entities, $"All {typeof(T).Name} retrieved successfully");
+                return PagedApiResponse<T>.SuccessListedData(entities, $"All {typeof(T).Name} retrieved successfully");
             }
             catch (Exception ex)
             {
@@ -164,7 +164,7 @@ namespace ERP.Application.Implementation.GenericService
 
                 var (data, meta) = await _repository.GetPagedWithMetaAsync(spec);
                 _logger.LogInformation($"Retrieved {data.Count} {typeof(T).Name} entities with specification");
-                return ApiResponse<T>.SuccessWithPagingMetaData(data, meta, $"{typeof(T).Name} retrieved successfully");
+                return PagedApiResponse<T>.SuccessWithPagingMetaData(data, meta, $"{typeof(T).Name} retrieved successfully");
             }
             catch (Exception ex)
             {

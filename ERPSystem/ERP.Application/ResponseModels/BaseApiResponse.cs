@@ -18,7 +18,6 @@ namespace ERP.Application.ResponseModels
         {
             return new BaseApiResponse
             {
-                Success = true,
                 Message = message,
                 StatusCode = statusCode,
                 Errors = new()

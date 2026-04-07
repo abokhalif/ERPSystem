@@ -4,29 +4,9 @@ namespace ERP.API.ResponseModels
 {
     public class ApiResponse<T> : BaseResponse
     {
-        public IReadOnlyList<T>? ListedData { get; set; }
         public T? Data { get; set; }
-        public PagingMetaData? MetaData { get; set; } = new PagingMetaData();
 
-        public static ApiResponse<T> SuccessWithPagingMetaData(IReadOnlyList<T> data, PagingMetaData? metaData = null, string? message = null, int statusCode = 200)
-        {
-            return new ApiResponse<T>
-            {
-                StatusCode = statusCode,
-                Message = message ?? GetDefaultMessage(statusCode),
-                MetaData = metaData ?? new PagingMetaData(),
-                ListedData = data,
-            };
-        }
-        public static ApiResponse<T> SuccessListedData(IReadOnlyList<T> data, string? message = null, int statusCode = 200)
-        {
-            return new ApiResponse<T>
-            {
-                StatusCode = statusCode,
-                Message = message ?? GetDefaultMessage(statusCode),
-                ListedData = data,
-            };
-        }
+       
         public static ApiResponse<T> SuccessResponse(T data, string? message = null, int statusCode = 200)
         {
             return new ApiResponse<T>
@@ -45,7 +25,6 @@ namespace ERP.API.ResponseModels
                 StatusCode = statusCode,
                 Message = message ?? GetDefaultMessage(statusCode),
                 Data = default,
-                MetaData = default,
                 Errors = errors ?? new()
 
             };
@@ -65,7 +44,7 @@ namespace ERP.API.ResponseModels
             };
         }
 
-        private static string GetDefaultMessage(int statusCode)
+        protected static string GetDefaultMessage(int statusCode)
         {
             return statusCode switch
             {

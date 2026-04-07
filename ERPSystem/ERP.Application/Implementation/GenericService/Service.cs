@@ -2,6 +2,7 @@
 using ERP.Application.Implementation.Services;
 using ERP.Application.Interfaces;
 using ERP.Application.Interfaces.IGenericServices;
+using ERP.Application.ResponseModels;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
@@ -26,7 +27,7 @@ namespace ERP.Application.Implementation.GenericService
         /// <summary>
         /// Gets entities with specification asynchronously.
         /// </summary>
-        public virtual async Task<ApiResponse<T>> GetWithSpecAsync(ISpecification<T> spec)
+        public virtual async Task<ApiResponse<T>> GetEntitiesWithSpecAsync(ISpecification<T> spec)
         {
             var entityName = typeof(T).Name;
 
@@ -45,7 +46,7 @@ namespace ERP.Application.Implementation.GenericService
 
                 _logger.LogInformation("Successfully retrieved {Count} {Entity} records with specification ",
                     data.Count, entityName);
-                return ApiResponse<T>.SuccessWithPagingMetaData(
+                return PagedApiResponse<T>.SuccessWithPagingMetaData(
                     data,
                     meta,
                     $"{entityName} retrieved successfully");
