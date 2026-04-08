@@ -72,12 +72,12 @@ namespace ERP.Application.Implementation.GenericService
         /// <summary>
         /// Creates a new entity asynchronously.
         /// </summary>
-        public virtual async Task<ApiResponse<T>> CreateAsync(T entity)
+        public virtual async Task<BaseApiResponse> CreateAsync(T entity)
         {
             try
             {
                 if (entity == null)
-                    return ApiResponse<T>.FailureResponse("Entity cannot be null", new List<string> { "Provide valid entity data" }, 400);
+                    return BaseApiResponse.FailureResponse("Entity cannot be null", new List<string> { "Provide valid entity data" }, 400);
 
                 await _unitOfWork.BeginTransactionAsync();
                 await _repository.AddAsync(entity);
@@ -85,13 +85,13 @@ namespace ERP.Application.Implementation.GenericService
                 await _unitOfWork.CommitTransactionAsync();
 
                 _logger.LogInformation($"New {typeof(T).Name} created successfully");
-                return ApiResponse<T>.SuccessResponse(entity, $"{typeof(T).Name} created successfully", 201);
+                return BaseApiResponse.SuccessResponse( $"{typeof(T).Name} created successfully", 201);
             }
             catch (Exception ex)
             {
                 await _unitOfWork.RollbackTransactionAsync();
                 _logger.LogError(ex, $"Error creating new {typeof(T).Name}");
-                return ApiResponse<T>.ErrorResponse(ex, 500);
+                return BaseApiResponse.ErrorResponse(ex, 500);
             }
         }
 

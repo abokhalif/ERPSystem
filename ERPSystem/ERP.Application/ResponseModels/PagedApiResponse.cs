@@ -16,6 +16,7 @@ namespace ERP.Application.ResponseModels
         {
             return new PagedApiResponse<T>
             {
+                Success = true,
                 StatusCode = statusCode,
                 Message = message ?? GetDefaultMessage(statusCode),
                 MetaData = metaData ?? new PagingMetaData(),
@@ -27,6 +28,7 @@ namespace ERP.Application.ResponseModels
         {
             return new PagedApiResponse<T>
             {
+                Success = true,
                 StatusCode = statusCode,
                 Message = message ?? GetDefaultMessage(statusCode),
                 ListedData = data,

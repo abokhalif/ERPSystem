@@ -14,7 +14,7 @@ namespace ERP.Application.Interfaces.IGenericServices
 
         Task<ApiResponse<T>> GetAllAsync();
 
-        Task<ApiResponse<T>> CreateAsync(T entity);
+        Task<BaseApiResponse> CreateAsync(T entity);
 
        
         Task<ApiResponse<T>> UpdateAsync(T entity);

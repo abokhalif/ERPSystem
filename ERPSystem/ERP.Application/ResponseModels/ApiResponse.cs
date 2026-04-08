@@ -11,6 +11,7 @@ namespace ERP.API.ResponseModels
         {
             return new ApiResponse<T>
             {
+                Success = true,
                 StatusCode = statusCode,
                 Message = message ?? GetDefaultMessage(statusCode),
                 Data = data,
@@ -22,6 +23,7 @@ namespace ERP.API.ResponseModels
         {
             return new ApiResponse<T>
             {
+                Success = false,
                 StatusCode = statusCode,
                 Message = message ?? GetDefaultMessage(statusCode),
                 Data = default,
@@ -37,6 +39,7 @@ namespace ERP.API.ResponseModels
 
             return new ApiResponse<T>
             {
+                Success = false,
                 Message = "An error occurred",
                 Data = default,
                 StatusCode = statusCode,

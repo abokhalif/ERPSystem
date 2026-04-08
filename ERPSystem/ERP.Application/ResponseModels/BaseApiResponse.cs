@@ -9,7 +9,6 @@ namespace ERP.Application.ResponseModels
 {
     public class BaseApiResponse:BaseResponse
     {
-        public bool Success { get; set; }
 
         /// <summary>
         /// Creates a success response.
@@ -18,6 +17,7 @@ namespace ERP.Application.ResponseModels
         {
             return new BaseApiResponse
             {
+                Success = true, 
                 Message = message,
                 StatusCode = statusCode,
                 Errors = new()

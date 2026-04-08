@@ -15,8 +15,20 @@ namespace ERP.API.Controllers.Product
         {
             _service = variantOptionService;
         }
-        [HttpPost]
-        public async Task<IActionResult> Create([FromBody] CreateVariantOptionDto dto)
+        [HttpGet("VariantOption{id}")]
+        public async Task<IActionResult> GetVariantOptionById(int id)
+        {
+            var response = await _service.GetByIdAsync(id);
+            return StatusCode(response.StatusCode, response);
+        }
+        [HttpGet("VariantOptions")]
+        public async Task<IActionResult> GetAllVariantOption()
+        {
+            var response = await _service.GetAllAsync();
+            return StatusCode(response.StatusCode, response);
+        }
+        [HttpPost("VariantOption")]
+        public async Task<IActionResult> CreateVariantOption([FromBody] CreateVariantOptionDto dto)
         {
 
             if (!ModelState.IsValid)
@@ -25,5 +37,26 @@ namespace ERP.API.Controllers.Product
             var response = await _service.CreateAsync(variantOption);
             return StatusCode(response.StatusCode, response);
         }
+        [HttpPut("VariantOption{id}")]
+        public async Task<IActionResult> UpdateVariantOption(int id, [FromBody] CreateVariantOptionDto dto)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            var getResponse = await _service.GetByIdAsync(id);
+            if (!getResponse.Success)
+                return StatusCode(getResponse.StatusCode, getResponse);
+            getResponse.Data.Name = dto.Name;
+            var response = await _service.UpdateAsync(getResponse.Data);
+            return StatusCode(response.StatusCode, response);
+        }
+        [HttpDelete("VariantOption{id}")]
+        public async Task<IActionResult> DeleteVariantOption(int id)
+        {
+            var response = await _service.DeleteAsync(id);
+            return StatusCode(response.StatusCode, response);
+        }
+
+
     }
 }
