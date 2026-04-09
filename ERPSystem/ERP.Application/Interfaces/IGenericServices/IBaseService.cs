@@ -12,7 +12,7 @@ namespace ERP.Application.Interfaces.IGenericServices
     {
         Task<ApiResponse<T>> GetByIdAsync(int id);
 
-        Task<ApiResponse<T>> GetAllAsync();
+        Task<PagedApiResponse<T>> GetAllAsync();
 
         Task<BaseApiResponse> CreateAsync(T entity);
 

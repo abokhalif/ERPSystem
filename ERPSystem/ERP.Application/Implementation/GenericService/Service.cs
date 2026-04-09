@@ -23,11 +23,11 @@ namespace ERP.Application.Implementation.GenericService
             : base(unitOfWork, logger)
         {
         }
-
+        
         /// <summary>
         /// Gets entities with specification asynchronously.
         /// </summary>
-        public virtual async Task<ApiResponse<T>> GetEntitiesWithSpecAsync(ISpecification<T> spec)
+        public virtual async Task<PagedApiResponse<T>> GetEntitiesWithSpecAsync(ISpecification<T> spec)
         {
             var entityName = typeof(T).Name;
 
@@ -35,10 +35,8 @@ namespace ERP.Application.Implementation.GenericService
             {
                 if (spec == null)
                 {
-                    return ApiResponse<T>.FailureResponse(
-                        "Specification cannot be null",
-                        new List<string> { "Provide valid specification" },
-                        400);
+                    return PagedApiResponse<T>.FailureResponse(new List<string> { "Provide valid specification" },
+                        "Specification cannot be null", 400);
                 }
 
 
@@ -46,7 +44,7 @@ namespace ERP.Application.Implementation.GenericService
 
                 _logger.LogInformation("Successfully retrieved {Count} {Entity} records with specification ",
                     data.Count, entityName);
-                return PagedApiResponse<T>.SuccessWithPagingMetaData(
+                return PagedApiResponse<T>.SuccessWithMetaData(
                     data,
                     meta,
                     $"{entityName} retrieved successfully");
@@ -55,7 +53,7 @@ namespace ERP.Application.Implementation.GenericService
             {
                 _logger.LogError(ex, "Error retrieving {Entity} with specification ",
                     entityName);
-                return ApiResponse<T>.ErrorResponse(ex, 500);
+                return PagedApiResponse<T>.ErrorResponse(ex,null ,500);
             }
         }
 
@@ -70,10 +68,8 @@ namespace ERP.Application.Implementation.GenericService
             {
                 if (spec == null)
                 {
-                    return ApiResponse<T>.FailureResponse(
-                        "Specification cannot be null",
-                        new List<string> { "Provide valid specification" },
-                        400);
+                    return ApiResponse<T>.FailureResponse(new List<string> { "Provide valid specification" },
+                        "Specification cannot be null",400);
                 }
 
 
@@ -81,7 +77,7 @@ namespace ERP.Application.Implementation.GenericService
 
                 if (entity == null)
                 {
-                    return ApiResponse<T>.FailureResponse($"{entityName} not found");
+                    return ApiResponse<T>.FailureResponse(null,$"{entityName} not found");
                 }
                 _logger.LogInformation($"{typeof(T).Name} retrieved successfully");
 
@@ -94,7 +90,7 @@ namespace ERP.Application.Implementation.GenericService
             {
                 _logger.LogError(ex, "Error retrieving single {Entity} with specification after ",
                     entityName);
-                return ApiResponse<T>.ErrorResponse(ex, 500);
+                return ApiResponse<T>.ErrorResponse(ex,null, 500);
             }
         }
 
@@ -109,10 +105,8 @@ namespace ERP.Application.Implementation.GenericService
             {
                 if (spec == null)
                 {
-                    return ApiResponse<int>.FailureResponse(
-                        "Specification cannot be null",
-                        new List<string> { "Provide valid specification" },
-                        400);
+                    return ApiResponse<int>.FailureResponse(new List<string> { "Provide valid specification" },
+                        "Specification cannot be null", 400);
                 }
 
 
@@ -130,7 +124,7 @@ namespace ERP.Application.Implementation.GenericService
             {
                 _logger.LogError(ex, "Error counting {Entity} ",
                     entityName);
-                return ApiResponse<int>.ErrorResponse(ex, 500);
+                return ApiResponse<int>.ErrorResponse(ex, null,500);
             }
         }
 
@@ -145,9 +139,8 @@ namespace ERP.Application.Implementation.GenericService
             {
                 if (spec == null)
                 {
-                    return ApiResponse<bool>.FailureResponse(
+                    return ApiResponse<bool>.FailureResponse(new List<string> { "Provide valid specification" },
                         "Specification cannot be null",
-                        new List<string> { "Provide valid specification" },
                         400);
                 }
 
@@ -167,8 +160,10 @@ namespace ERP.Application.Implementation.GenericService
             {
                 _logger.LogError(ex, "Error checking {Entity} existence ",
                     entityName);
-                return ApiResponse<bool>.ErrorResponse(ex, 500);
+                return ApiResponse<bool>.ErrorResponse(ex,null, 500);
             }
         }
+
+        
     }
 }

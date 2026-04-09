@@ -81,7 +81,7 @@ namespace ERP.API.Middlewares
                 if (_environment.IsDevelopment())
                 {
                     // In development: provide detailed stack trace and inner exceptions
-                    response = BaseApiResponse.ErrorResponseDetailedEx(
+                    response = BaseApiResponse.ErrorResponse(
                         exception,
                         details: $"{message}\n\nStack Trace: {exception.StackTrace}",
                         statusCode: (int)statusCode);

@@ -19,7 +19,7 @@ namespace ERP.API.ResponseModels
             };
         }
 
-        public static ApiResponse<T> FailureResponse(string? message = null, List<string>? errors = null, int statusCode = 400)
+        public static ApiResponse<T> FailureResponse(List<string>? errors = null, string? message = null, int statusCode = 400)
         {
             return new ApiResponse<T>
             {
@@ -31,37 +31,22 @@ namespace ERP.API.ResponseModels
 
             };
         }
-        public static ApiResponse<T> ErrorResponse(Exception ex, int statusCode = 500)
+        public static ApiResponse<T> ErrorResponse(Exception ex,string? message= "Internal server error.", int statusCode = 500)
         {
-            var errors = new List<string> { ex.Message };
-            if (ex.InnerException != null)
-                errors.Add(ex.InnerException.Message);
 
             return new ApiResponse<T>
             {
                 Success = false,
-                Message = "An error occurred",
-                Data = default,
+                Message = message?? GetDefaultMessage(statusCode),
                 StatusCode = statusCode,
-                Errors = errors
+                Data = default,
+                Errors = ExtractErrors(ex)
+
             };
         }
 
-        protected static string GetDefaultMessage(int statusCode)
-        {
-            return statusCode switch
-            {
-                200 => "Request succeeded.",
-                201 => "Resource created successfully.",
-                204 => "No content.",
-                400 => "Bad request.",
-                401 => "Unauthorized access.",
-                403 => "Forbidden.",
-                404 => "Resource not found.",
-                422 => "Unprocessable entity.",
-                500 => "Internal server error.",
-                _ => "Unexpected error."
-            };
-        }
+        
+        
+
     }
 }

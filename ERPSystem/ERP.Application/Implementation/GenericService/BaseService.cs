@@ -34,12 +34,12 @@ namespace ERP.Application.Implementation.GenericService
             try
             {
                 if (id <= 0)
-                    return ApiResponse<T>.FailureResponse("Invalid ID provided", new List<string> { "ID must be positive" }, 400);
+                    return ApiResponse<T>.FailureResponse(new List<string> { "ID must be positive" }, "Invalid ID provided",  400);
 
                 var entity = await _repository.GetAsync(id);
 
                 if (entity == null)
-                    return ApiResponse<T>.FailureResponse($"{typeof(T).Name} not found", statusCode: 404);
+                    return ApiResponse<T>.FailureResponse(null,$"{typeof(T).Name} not found", statusCode: 404);
 
                 _logger.LogInformation($"{typeof(T).Name} with ID {id} retrieved successfully");
                 return ApiResponse<T>.SuccessResponse(entity, $"{typeof(T).Name} retrieved successfully");
@@ -47,25 +47,25 @@ namespace ERP.Application.Implementation.GenericService
             catch (Exception ex)
             {
                 _logger.LogError(ex, $"Error retrieving {typeof(T).Name} with ID {id}");
-                return ApiResponse<T>.ErrorResponse(ex, 500);
+                return ApiResponse<T>.ErrorResponse(ex,null,500);
             }
         }
 
         /// <summary>
         /// Gets all entities asynchronously.
         /// </summary>
-        public virtual async Task<ApiResponse<T>> GetAllAsync()
+        public virtual async Task<PagedApiResponse<T>> GetAllAsync()
         {
             try
             {
                 var entities = await _repository.GetAllAsync();
                 _logger.LogInformation($"Retrieved {entities.Count} {typeof(T).Name} entities");
-                return PagedApiResponse<T>.SuccessListedData(entities, $"All {typeof(T).Name} retrieved successfully");
+                return PagedApiResponse<T>.SuccessWithMetaData(entities,null,$"All {typeof(T).Name} retrieved successfully");
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, $"Error retrieving all {typeof(T).Name} entities");
-                return ApiResponse<T>.ErrorResponse(ex, 500);
+                return PagedApiResponse<T>.ErrorResponse(ex,null, 500);
             }
         }
 
@@ -91,7 +91,7 @@ namespace ERP.Application.Implementation.GenericService
             {
                 await _unitOfWork.RollbackTransactionAsync();
                 _logger.LogError(ex, $"Error creating new {typeof(T).Name}");
-                return BaseApiResponse.ErrorResponse(ex, 500);
+                return BaseApiResponse.ErrorResponse(ex,null, 500);
             }
         }
 
@@ -103,7 +103,7 @@ namespace ERP.Application.Implementation.GenericService
             try
             {
                 if (entity == null)
-                    return ApiResponse<T>.FailureResponse("Entity cannot be null", new List<string> { "Provide valid entity data" }, 400);
+                    return ApiResponse<T>.FailureResponse(new List<string> { "Provide valid entity data" }, "Entity cannot be null",  400);
 
                 await _unitOfWork.BeginTransactionAsync();
                 _repository.Update(entity);
@@ -117,7 +117,7 @@ namespace ERP.Application.Implementation.GenericService
             {
                 await _unitOfWork.RollbackTransactionAsync();
                 _logger.LogError(ex, $"Error updating {typeof(T).Name}");
-                return ApiResponse<T>.ErrorResponse(ex, 500);
+                return ApiResponse<T>.ErrorResponse(ex,null, 500);
             }
         }
 
@@ -148,28 +148,28 @@ namespace ERP.Application.Implementation.GenericService
             {
                 await _unitOfWork.RollbackTransactionAsync();
                 _logger.LogError(ex, $"Error deleting {typeof(T).Name}");
-                return BaseApiResponse.ErrorResponse(ex, 500);
+                return BaseApiResponse.ErrorResponse(ex, null, 500);
             }
         }
 
         /// <summary>
         /// Gets entities with specification asynchronously.
         /// </summary>
-        public virtual async Task<ApiResponse<T>> GetPagedWithMetaAsync(ISpecification<T> spec)
+        public virtual async Task<PagedApiResponse<T>> GetPagedWithMetaAsync(ISpecification<T> spec)
         {
             try
             {
                 if (spec == null)
-                    return ApiResponse<T>.FailureResponse("Specification cannot be null", new List<string> { "Provide valid specification" }, 400);
+                    return PagedApiResponse<T>.FailureResponse(new List<string> { "Provide valid specification" }, "Specification cannot be null", 400);
 
                 var (data, meta) = await _repository.GetPagedWithMetaAsync(spec);
                 _logger.LogInformation($"Retrieved {data.Count} {typeof(T).Name} entities with specification");
-                return PagedApiResponse<T>.SuccessWithPagingMetaData(data, meta, $"{typeof(T).Name} retrieved successfully");
+                return PagedApiResponse<T>.SuccessWithMetaData(data, meta, $"{typeof(T).Name} retrieved successfully");
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, $"Error retrieving {typeof(T).Name} with specification");
-                return ApiResponse<T>.ErrorResponse(ex, 500);
+                return PagedApiResponse<T>.ErrorResponse(ex,null, 500);
             }
         }
     }

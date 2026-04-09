@@ -41,33 +41,18 @@ namespace ERP.Application.ResponseModels
         /// <summary>
         /// Creates an error response.
         /// </summary>
-        public static BaseApiResponse ErrorResponse(Exception ex, int statusCode = 500)
+        public static BaseApiResponse ErrorResponse(Exception ex, string? details = null, int statusCode = 500)
         {
-            var errors = new List<string> { ex.Message };
-            if (ex.InnerException != null)
-                errors.Add(ex.InnerException.Message);
-
             return new BaseApiResponse
             {
                 Success = false,
-                Message = "An error occurred",
+                Message = details?? "An error occurred",
                 StatusCode = statusCode,
-                Errors = errors
+                Errors = ExtractErrors(ex)
             };
         }
-        public static BaseApiResponse ErrorResponseDetailedEx(Exception ex,string details=null, int statusCode = 500)
-        {
-            var errors = new List<string> { ex.Message };
-            if (ex.InnerException != null)
-                errors.Add(ex.InnerException.Message);
+       
+       
 
-            return new BaseApiResponse
-            {
-                Success = false,
-                Message = details,
-                StatusCode = statusCode,
-                Errors = errors,
-            };
-        }
     }
 }

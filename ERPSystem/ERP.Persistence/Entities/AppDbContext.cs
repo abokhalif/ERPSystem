@@ -53,13 +53,60 @@ namespace ERP.Persistence.Entities
 
                 // Sneakers White 42
                 new VariantValue { Id = 5, ProductVariantId = 3, VariantOptionId = 1, Value = "White" },
-                new VariantValue { Id = 6, ProductVariantId = 3, VariantOptionId = 2, Value = "42" }
+                new VariantValue { Id = 6, ProductVariantId = 3, VariantOptionId = 2, Value = "42" });
+
+            #region Categories Seeding
+
+            modelBuilder.Entity<Category>().HasData(
+                new Category
+                {
+                    Id = 1,
+                    Name = "Electronics",
+                    Description = "Electronic devices and gadgets",
+                    DisplayOrder = 1,
+                    CreatedAt = DateTime.Now,
+                    IsDeleted = false
+                },
+                new Category
+                {
+                    Id = 2,
+                    Name = "Clothing",
+                    Description = "Apparel and fashion items",
+                    DisplayOrder = 2,
+                    CreatedAt = DateTime.Now,
+                    IsDeleted = false
+                },
+                new Category
+                {
+                    Id = 3,
+                    Name = "Men's Clothing",
+                    Description = "Men's apparel",
+                    ParentCategoryId = 2,
+                    DisplayOrder = 1,
+                    CreatedAt = DateTime.Now,
+                    IsDeleted = false
+                },
+                new Category
+                {
+                    Id = 4,
+                    Name = "Women's Clothing",
+                    Description = "Women's apparel",
+                    ParentCategoryId = 2,
+                    DisplayOrder = 2,
+                    CreatedAt = DateTime.Now,
+                    IsDeleted = false
+                }
+            
+
             );
+            #endregion
+
 
         }
         #region Product Module
 
         public DbSet<Product> Products { get; set; }
+        public DbSet<Category> Categories { get; set; }
         public DbSet<ProductVariant> ProductVariants { get; set; }
         public DbSet<VariantOptions> VariantOptions { get; set; }
         public DbSet<VariantValue> VariantValues { get; set; }

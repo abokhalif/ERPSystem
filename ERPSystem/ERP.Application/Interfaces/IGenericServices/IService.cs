@@ -1,4 +1,5 @@
 ﻿using ERP.API.ResponseModels;
+using ERP.Application.ResponseModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,7 +13,7 @@ namespace ERP.Application.Interfaces.IGenericServices
         /// <summary>
         /// Gets entities with specification asynchronously.
         /// </summary>
-        Task<ApiResponse<T>> GetEntitiesWithSpecAsync(ISpecification<T> spec);
+        Task<PagedApiResponse<T>> GetEntitiesWithSpecAsync(ISpecification<T> spec);
 
         /// <summary>
         /// Gets a single entity matching the specification asynchronously.
