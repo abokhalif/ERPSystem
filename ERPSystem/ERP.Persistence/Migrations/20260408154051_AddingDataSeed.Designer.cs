@@ -4,6 +4,7 @@ using ERP.Persistence.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ERP.Persistence.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260408154051_AddingDataSeed")]
+    partial class AddingDataSeed
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -34,14 +37,10 @@ namespace ERP.Persistence.Migrations
                         .HasColumnType("decimal(18,2)");
 
                     b.Property<DateTime>("CreatedAt")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("datetime2")
-                        .HasDefaultValueSql("GETUTCDATE()");
+                        .HasColumnType("datetime2");
 
                     b.Property<bool>("IsDeleted")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bit")
-                        .HasDefaultValue(false);
+                        .HasColumnType("bit");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -57,7 +56,7 @@ namespace ERP.Persistence.Migrations
                         {
                             Id = 1,
                             BasePrice = 200m,
-                            CreatedAt = new DateTime(2026, 4, 8, 23, 21, 16, 596, DateTimeKind.Local).AddTicks(2925),
+                            CreatedAt = new DateTime(2026, 4, 8, 17, 40, 51, 33, DateTimeKind.Local).AddTicks(2102),
                             IsDeleted = false,
                             Name = "T-Shirt"
                         },
@@ -65,7 +64,7 @@ namespace ERP.Persistence.Migrations
                         {
                             Id = 2,
                             BasePrice = 800m,
-                            CreatedAt = new DateTime(2026, 4, 8, 23, 21, 16, 596, DateTimeKind.Local).AddTicks(2931),
+                            CreatedAt = new DateTime(2026, 4, 8, 17, 40, 51, 33, DateTimeKind.Local).AddTicks(2108),
                             IsDeleted = false,
                             Name = "Sneakers"
                         });
@@ -461,7 +460,7 @@ namespace ERP.Persistence.Migrations
                     b.HasOne("ERP.Domain.Entities.Product.VariantOptions", "Option")
                         .WithMany()
                         .HasForeignKey("VariantOptionId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Option");

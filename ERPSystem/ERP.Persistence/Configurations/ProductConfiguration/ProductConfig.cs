@@ -22,6 +22,19 @@ namespace ERP.Persistence.Configurations.ProductConfiguration
             builder.Property(p => p.BasePrice)
                 .HasColumnType("decimal(18,2)");
 
+            builder.Property(p => p.CreatedAt)
+               .HasDefaultValueSql("GETUTCDATE()");
+
+            builder.Property(p => p.IsDeleted)
+                .HasDefaultValue(false);
+
+            builder.HasMany(p => p.Variants)
+                .WithOne(v => v.Product)
+                .HasForeignKey(v => v.ProductId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            builder.HasQueryFilter(p => !p.IsDeleted);
+
             builder.HasMany(p => p.Variants)
                 .WithOne(v => v.Product)
                 .HasForeignKey(v => v.ProductId)

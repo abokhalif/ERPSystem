@@ -29,7 +29,7 @@ namespace ERP.Persistence.Configurations.ProductConfiguration
             builder.HasOne(v => v.Option)
                 .WithMany()
                 .HasForeignKey(v => v.VariantOptionId)
-                .OnDelete(DeleteBehavior.Restrict);
+                .OnDelete(DeleteBehavior.Cascade);
         }
     }
 }

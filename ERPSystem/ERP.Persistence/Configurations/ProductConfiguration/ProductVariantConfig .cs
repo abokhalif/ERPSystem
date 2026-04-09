@@ -33,6 +33,8 @@ namespace ERP.Persistence.Configurations.ProductConfiguration
 
             // ✅ Index for performance
             builder.HasIndex(v => v.ProductId);
+            builder.HasQueryFilter(v => !v.Product.IsDeleted);
+
 
             builder.HasMany(v => v.VariantValues)
                 .WithOne(vv => vv.ProductVariant)
