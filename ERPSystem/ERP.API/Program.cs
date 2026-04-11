@@ -1,6 +1,8 @@
 
+using AutoMapper;
 using ERP.API.Extentions;
 using ERP.Persistence.Entities;
+using FluentValidation;
 using Microsoft.EntityFrameworkCore;
 using System;
 
@@ -24,9 +26,12 @@ namespace ERP.API
                 option.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
             });
 
+
             builder.Services.AddHostedService<MigrationService>();
 
             builder.Services.RegisterService();
+            // 1. Register FluentValidation
+           
 
             var app = builder.Build();
 
