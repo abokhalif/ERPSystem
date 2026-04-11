@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ERP.Application.Features.CategorySpec
+namespace ERP.Application.Features.CategoryFeatures.Specifications
 {
     /// <summary>
     /// Specification for getting categories with pagination.

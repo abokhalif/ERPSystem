@@ -1,5 +1,5 @@
 ﻿using ERP.API.ResponseModels;
-using ERP.Application.DTOs.Product;
+using ERP.Application.Features.CategoryFeatures.DTOs;
 using ERP.Application.Interfaces.IGenericServices;
 using ERP.Application.ResponseModels;
 using ERP.Domain.Entities.Product;
@@ -9,7 +9,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ERP.Application.Interfaces.IServices
+namespace ERP.Application.Features.CategoryFeatures.Interface
 {
     /// <summary>
     /// Service interface for Category operations.

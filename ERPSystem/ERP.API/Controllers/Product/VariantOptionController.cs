@@ -1,7 +1,7 @@
-﻿using ERP.Application.DTOs.Product;
+﻿using ERP.Application.Features.ProductFeatures.DTOs;
+using ERP.Application.Features.ProductFeatures.Interface;
 using ERP.Application.Implementation.GenericService;
 using ERP.Application.Interfaces.IGenericServices;
-using ERP.Application.Interfaces.IServices;
 using ERP.Domain.Entities.Product;
 using Microsoft.AspNetCore.Mvc;
 

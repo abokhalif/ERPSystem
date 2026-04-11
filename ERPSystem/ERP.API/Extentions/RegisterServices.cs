@@ -1,8 +1,8 @@
 ﻿using ERP.API.ResponseModels;
+using ERP.Application.Features.ProductFeatures.Implementation;
+using ERP.Application.Features.ProductFeatures.Interface;
 using ERP.Application.Implementation.GenericService;
-using ERP.Application.Implementation.Services;
 using ERP.Application.Interfaces;
-using ERP.Application.Interfaces.IServices;
 using ERP.Application.ResponseModels;
 using ERP.Infrastructure.Implementation.Shared;
 using ERP.Infrastructure.Interface;

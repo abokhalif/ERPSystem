@@ -1,9 +1,9 @@
 ﻿using ERP.API.ResponseModels;
-using ERP.Application.DTOs.Product;
-using ERP.Application.Features.CategorySpec;
+using ERP.Application.Features.CategoryFeatures.DTOs;
+using ERP.Application.Features.CategoryFeatures.Interface;
+using ERP.Application.Features.CategoryFeatures.Specifications;
 using ERP.Application.Implementation.GenericService;
 using ERP.Application.Interfaces;
-using ERP.Application.Interfaces.IServices;
 using ERP.Application.ResponseModels;
 using ERP.Domain.Entities.Product;
 using Microsoft.Extensions.Logging;
@@ -14,7 +14,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ERP.Application.Implementation.Services
+namespace ERP.Application.Features.CategoryFeatures.Implementation
 {
     public class CategoryService : BaseService<Category>, ICategoryService
     {

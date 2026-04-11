@@ -10,6 +10,20 @@
     <PackageReference Include="Microsoft.Extensions.Logging" Version="8.0.1" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Features\ProductFeatures - Copy %282%29\DTOs\" />
+    <Folder Include="Features\ProductFeatures - Copy %282%29\Implementation\" />
+    <Folder Include="Features\ProductFeatures - Copy %282%29\Interface\" />
+    <Folder Include="Features\ProductFeatures - Copy %282%29\Mapping\" />
+    <Folder Include="Features\ProductFeatures - Copy %282%29\Specifications\" />
+    <Folder Include="Features\ProductFeatures - Copy %282%29\Validation\" />
+    <Folder Include="Features\CategoryFeatures\Mapping\" />
+    <Folder Include="Features\CategoryFeatures\Validation\" />
+    <Folder Include="Features\ProductFeatures\Mapping\" />
+    <Folder Include="Features\ProductFeatures\Validation\" />
+    <Folder Include="Features\ProductFeatures\Specifications\" />
+  </ItemGroup>
+
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>

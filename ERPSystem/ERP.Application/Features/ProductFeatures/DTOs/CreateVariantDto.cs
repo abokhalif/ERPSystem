@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ERP.Application.DTOs.Product
+namespace ERP.Application.Features.ProductFeatures.DTOs
 {
     public class CreateVariantDto
     {

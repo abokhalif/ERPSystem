@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ERP.Application.Interfaces.IServices
+namespace ERP.Application.Features.ProductFeatures.Interface
 {
     public interface IProductVariantService : IBaseService<ProductVariant>
     {

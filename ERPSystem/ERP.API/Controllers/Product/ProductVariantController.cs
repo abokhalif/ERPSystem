@@ -1,6 +1,4 @@
-﻿using ERP.Application.DTOs.Product;
-using ERP.Application.Implementation.Services;
-using ERP.Application.Interfaces.IServices;
+﻿using ERP.Application.Features.ProductFeatures.Interface;
 using ERP.Domain.Entities.Product;
 using Microsoft.AspNetCore.Mvc;
 

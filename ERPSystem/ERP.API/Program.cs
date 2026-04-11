@@ -1,6 +1,7 @@
 
 using AutoMapper;
 using ERP.API.Extentions;
+using ERP.Application.Shared;
 using ERP.Persistence.Entities;
 using FluentValidation;
 using Microsoft.EntityFrameworkCore;
@@ -31,7 +32,7 @@ namespace ERP.API
 
             builder.Services.RegisterService();
             // 1. Register FluentValidation
-           
+            builder.Services.AddApplicationServices();
 
             var app = builder.Build();
 
