@@ -8,5 +8,13 @@ namespace ERP.API.Extentions
         {
             return builder.UseMiddleware<ExceptionErrorMiddleware>();
         }
+        public static IApplicationBuilder UseProfilingMiddleware(this IApplicationBuilder builder)
+        {
+            return builder.UseMiddleware<ProfilingMiddleware>();
+        }
+        public static IApplicationBuilder UseRateLimitingMiddleware(this IApplicationBuilder builder)
+        {
+            return builder.UseMiddleware<RateLimitingMiddleware>();
+        }
     }
 }

@@ -26,7 +26,7 @@ namespace ERP.Application.Implementation.GenericService
         /// <summary>
         /// Gets entities with specification asynchronously.
         /// </summary>
-        public virtual async Task<PagedApiResponse<T>> GetEntitiesWithSpecAsync(ISpecification<T> spec)
+        public virtual async Task<PagedApiResponse<T>> GetAllWithSpecAsync(ISpecification<T> spec)
         {
             var entityName = typeof(T).Name;
 
@@ -59,7 +59,7 @@ namespace ERP.Application.Implementation.GenericService
         /// <summary>
         /// Gets a single entity matching the specification asynchronously.
         /// </summary>
-        public virtual async Task<ApiResponse<T>> GetEntityWithSpecAsync(ISpecification<T> spec)
+        public virtual async Task<ApiResponse<T>> GetWithSpecAsync(ISpecification<T> spec)
         {
             var entityName = typeof(T).Name;
 

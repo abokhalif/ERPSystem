@@ -13,12 +13,12 @@ namespace ERP.Application.Interfaces.IGenericServices
         /// <summary>
         /// Gets entities with specification asynchronously.
         /// </summary>
-        Task<PagedApiResponse<T>> GetEntitiesWithSpecAsync(ISpecification<T> spec);
+        Task<PagedApiResponse<T>> GetAllWithSpecAsync(ISpecification<T> spec);
 
         /// <summary>
         /// Gets a single entity matching the specification asynchronously.
         /// </summary>
-        Task<ApiResponse<T>> GetEntityWithSpecAsync(ISpecification<T> spec);
+        Task<ApiResponse<T>> GetWithSpecAsync(ISpecification<T> spec);
 
         /// <summary>
         /// Counts entities matching the specification asynchronously.

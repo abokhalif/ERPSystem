@@ -18,7 +18,6 @@
     <Folder Include="Features\ProductFeatures - Copy %282%29\Specifications\" />
     <Folder Include="Features\ProductFeatures - Copy %282%29\Validation\" />
     <Folder Include="Features\CategoryFeatures\Mapping\" />
-    <Folder Include="Features\CategoryFeatures\Validation\" />
     <Folder Include="Features\ProductFeatures\Mapping\" />
     <Folder Include="Features\ProductFeatures\Validation\" />
     <Folder Include="Features\ProductFeatures\Specifications\" />

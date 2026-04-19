@@ -14,7 +14,7 @@ namespace ERP.Application.Features.CategoryFeatures.Interface
     /// <summary>
     /// Service interface for Category operations.
     /// </summary>
-    public interface ICategoryService :IBaseService<Category>
+    public interface ICategoryService :IBaseService<Category>,IService<Category>
     {
        
         Task<PagedApiResponse<CategoryResponse>> SearchCategoriesAsync(

@@ -1,6 +1,7 @@
 
 using AutoMapper;
 using ERP.API.Extentions;
+using ERP.API.Filters;
 using ERP.Application.Shared;
 using ERP.Persistence.Entities;
 using FluentValidation;
@@ -17,7 +18,7 @@ namespace ERP.API
 
             // Add services to the container.
 
-            builder.Services.AddControllers();
+            builder.Services.AddControllers(option=> option.Filters.Add<LogActivityFilter>());
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
@@ -32,12 +33,13 @@ namespace ERP.API
 
             builder.Services.RegisterService();
             // 1. Register FluentValidation
+            //builder.Services.AddAutoMapper(typeof(Program));
+            //builder.Services.AddValidatorsFromAssembly(typeof(Application.AssemblyReference).Assembly);
             builder.Services.AddApplicationServices();
 
             var app = builder.Build();
 
-            // Configure the HTTP request pipeline.
-            app.UseExceptionErrorMiddleware();
+            
             if (app.Environment.IsDevelopment())
             {
                 app.UseSwagger();
@@ -48,12 +50,11 @@ namespace ERP.API
             app.UseHttpsRedirection();
             app.UseAuthentication();
             app.UseAuthorization();
-            //app.Run(async context =>
-            //{
-            //    await context.Request.ReadFormAsync();
-            //});
-
-
+           
+            // Configure the HTTP request pipeline.
+            app.UseExceptionErrorMiddleware();
+            app.UseProfilingMiddleware();
+            app.UseRateLimitingMiddleware();
             app.MapControllers();
 
             app.Run();

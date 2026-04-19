@@ -16,7 +16,7 @@ using System.Threading.Tasks;
 
 namespace ERP.Application.Features.CategoryFeatures.Implementation
 {
-    public class CategoryService : BaseService<Category>, ICategoryService
+    public class CategoryService :Service<Category>,  ICategoryService
     {
         public CategoryService(IUnitOfWork unitOfWork, ILogger<BaseService<Category>> logger) : base(unitOfWork, logger)
         {
@@ -37,9 +37,29 @@ namespace ERP.Application.Features.CategoryFeatures.Implementation
             throw new NotImplementedException();
         }
 
-        public Task<ApiResponse<List<CategoryWithHierarchyResponse>>> GetRootCategoriesAsync()
+        public  Task<PagedApiResponse<CategoryWithHierarchyResponse>> GetRootCategoriesAsync()
         {
             throw new NotImplementedException();
+            //try
+            //{
+            //    _logger.LogInformation("[Category] Getting root categories");
+
+            //    var spec = new GetRootCategoriesSpecification();
+            //    var categories = GetAllWithSpecAsync(spec);
+
+
+            //    var rootCategories = categories.Result.Data.Select(MapToCategoryWithHierarchy).ToList();
+
+
+            //    return ApiResponse<List<CategoryWithHierarchyResponse>>.SuccessResponse(
+            //        rootCategories,
+            //        "Root categories retrieved successfully");
+            //}
+            //catch (Exception ex)
+            //{
+
+            //    return ApiResponse<List<CategoryWithHierarchyResponse>>.ErrorResponse(ex);
+            //}
         }
 
         public async Task<PagedApiResponse<CategoryResponse>> SearchCategoriesAsync(string? searchTerm, int pageNumber = 1, int pageSize = 10)
@@ -56,7 +76,7 @@ namespace ERP.Application.Features.CategoryFeatures.Implementation
             var spec = new GetCategoriesSpecification(searchTerm, pageNumber, pageSize);
             if(spec == null)
                 return PagedApiResponse<CategoryResponse>.ErrorResponse( new NullReferenceException(),null, 500);
-            var response = await GetPagedWithMetaAsync(spec);
+            var response = await GetAllWithSpecAsync(spec);
             // Map to response DTOs
             var categoryResponses = response.Data?.Select(MapToCategoryResponse).ToList() ?? new();
 
@@ -68,12 +88,12 @@ namespace ERP.Application.Features.CategoryFeatures.Implementation
             return pagedResponse;
         }
 
+        Task<ApiResponse<List<CategoryWithHierarchyResponse>>> ICategoryService.GetRootCategoriesAsync()
+        {
+            throw new NotImplementedException();
+        }
 
-        
-            
-        
-
-     private CategoryResponse MapToCategoryResponse(Category category)
+        private CategoryResponse MapToCategoryResponse(Category category)
         {
             return new CategoryResponse
             {
@@ -86,6 +106,27 @@ namespace ERP.Application.Features.CategoryFeatures.Implementation
                 ProductCount = category.Products?.Count ?? 0,
                 ChildCategoryCount = category.ChildCategories?.Count ?? 0,
                 CreatedAt = category.CreatedAt,
+            };
+        }
+        private CategoryWithHierarchyResponse MapToCategoryWithHierarchy(Category category)
+        {
+            return new CategoryWithHierarchyResponse
+            {
+                Id = category.Id,
+                Name = category.Name,
+                Description = category.Description,
+                DisplayOrder = category.DisplayOrder,
+                ChildCategories = category.ChildCategories?
+                    .Select(MapToCategoryWithHierarchy)
+                    .ToList() ?? new(),
+                Products = category.Products?
+                    .Select(p => new CategoryProductResponse
+                    {
+                        Id = p.Id,
+                        Name = p.Name,
+                        BasePrice = p.BasePrice
+                    })
+                    .ToList() ?? new()
             };
         }
     }
