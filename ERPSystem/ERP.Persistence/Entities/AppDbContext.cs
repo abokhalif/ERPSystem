@@ -103,6 +103,9 @@ namespace ERP.Persistence.Entities
 
 
         }
+
+
+        public DbSet<RefreshToken> RefreshTokens { get; set; }
         #region Product Module
 
         public DbSet<Product> Products { get; set; }

@@ -7,14 +7,14 @@ using System.Threading.Tasks;
 
 namespace ERP.Application.DTOs
 {
-    public class LoginRequest
+    public class ProfileDTO
     {
-        [Required]
+        public string FullName { get; set; }
+
         [EmailAddress]
         public string Email { get; set; }
 
-        [Required]
-        [DataType(DataType.Password)]
-        public string Password { get; set; }
+        [Phone]
+        public string PhoneNumber { get; set; }
     }
 }

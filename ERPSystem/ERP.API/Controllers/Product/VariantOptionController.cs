@@ -3,6 +3,7 @@ using ERP.Application.Features.ProductFeatures.Interface;
 using ERP.Application.Implementation.GenericService;
 using ERP.Application.Interfaces.IGenericServices;
 using ERP.Domain.Entities.Product;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ERP.API.Controllers.Product
@@ -21,6 +22,7 @@ namespace ERP.API.Controllers.Product
             var response = await _service.GetByIdAsync(id);
             return StatusCode(response.StatusCode, response);
         }
+        [Authorize]
         [HttpGet("VariantOptions")]
         public async Task<IActionResult> GetAllVariantOption()
         {

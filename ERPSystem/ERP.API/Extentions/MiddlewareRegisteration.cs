@@ -16,5 +16,9 @@ namespace ERP.API.Extentions
         {
             return builder.UseMiddleware<RateLimitingMiddleware>();
         }
+        public static IApplicationBuilder UseJwtMiddleware(this IApplicationBuilder builder)
+        {
+            return builder.UseMiddleware<JwtMiddleware>();
+        }
     }
 }

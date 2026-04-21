@@ -5,16 +5,23 @@ using ERP.Application.Implementation.GenericService;
 using ERP.Application.Interfaces;
 using ERP.Application.ResponseModels;
 using ERP.Infrastructure.Implementation.Shared;
-using ERP.Infrastructure.Interface;
 using ERP.Persistence.Entities;
 using ERP.Persistence.Entities.Authentication;
+using ERP.Persistence.Implementation.Shared;
+using ERP.Persistence.Interface;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 namespace ERP.API.Extentions
 {
     public static class RegisterServices
     {
-        public static IServiceCollection RegisterService(this IServiceCollection services)
+
+      
+        public static IServiceCollection RegisterService(this IServiceCollection services
+            , IConfiguration configuration)
         {
             services.AddIdentity<ApplicationUser, IdentityRole>(options=>
             { 
@@ -39,6 +46,26 @@ namespace ERP.API.Extentions
                 };
             });
 
+
+            var jwtSettings = configuration.GetSection("JWT");
+            var key = Encoding.UTF8.GetBytes(jwtSettings["Key"]);
+            services.AddAuthentication(x =>
+            {
+                x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            })
+               .AddJwtBearer(x =>
+               {
+                   x.RequireHttpsMetadata = false;
+                   x.SaveToken = true;
+                   x.TokenValidationParameters = new TokenValidationParameters
+                   {
+                       ValidateIssuerSigningKey = true,
+                       IssuerSigningKey = new SymmetricSecurityKey(key),
+                       ValidateIssuer = false,
+                       ValidateAudience = false
+                   };
+               });
             services.AddScoped<IUnitOfWork, UnitOfWork>();
             services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
             services.AddScoped(typeof(IBaseRepository<>), typeof(BaseRepository<>));

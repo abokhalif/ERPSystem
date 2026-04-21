@@ -1,5 +1,6 @@
 ﻿using ERP.Application.DTOs;
 using ERP.Application.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ERP.API.Controllers
@@ -14,18 +15,37 @@ namespace ERP.API.Controllers
         {
             _authService = authService;
         }
-
+        [AllowAnonymous]
         [HttpPost("register")]
-        public async Task<IActionResult> Register(RegisterRequest request)
+        public async Task<IActionResult> Register([FromBody]RegisterRequest request)
         {
             var result = await _authService.RegisterAsync(request);
+            if (result.Errors.Any())
+            {
+                return BadRequest(result.Errors);
+            }
             return Ok(result);
         }
 
         [HttpPost("login")]
-        public async Task<IActionResult> Login(LoginRequest request)
+        public async Task<IActionResult> Login([FromBody]LoginRequest request)
         {
             var result = await _authService.LoginAsync(request);
+            if (result.Errors.Any())
+            {
+                return Unauthorized(result.Errors);
+            }
+            return Ok(result);
+        }
+        [HttpPost("refresh-token")]
+        public async Task<IActionResult> RefreshToken([FromBody] RefreshTokenRequestDTO refreshRequest)
+        {
+            var result = await _authService.RefreshTokenAsync(refreshRequest.Token, refreshRequest.RefreshToken);
+            if (result.Errors.Any())
+            {
+                return Unauthorized(result.Errors);
+            }
+
             return Ok(result);
         }
     }
